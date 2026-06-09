@@ -19,72 +19,88 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-st.title("🔢 Calculadora de Teoria de Filas")
-st.markdown("Calcule métricas para vários modelos de filas com precisão de 8 casas decimais")
-st.info("💡 **Dica**: Todos os campos de entrada suportam valores com até 8 casas decimais para máxima precisão.")
+st.markdown("""
+<style>
+    .stApp {
+        background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+    }
+    [data-testid="stSidebar"] {
+        background: #111827;
+    }
+    [data-testid="stSidebar"] * {
+        color: #e5e7eb;
+    }
+    .hero-card {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        padding: 1rem 1.25rem;
+        box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+        margin-bottom: 1rem;
+    }
+</style>
+""", unsafe_allow_html=True)
 
-st.sidebar.title("Modelos de Filas")
-st.sidebar.markdown("Selecione o tipo de fila que deseja analisar:")
+st.markdown("""
+<div class="hero-card">
+    <h1 style="margin:0; color:#1f2937;">Calculadora de Teoria de Filas</h1>
+    <p style="margin:0.35rem 0 0 0; color:#4b5563;">Interface simplificada para análise dos modelos com precisão de 8 casas decimais.</p>
+</div>
+""", unsafe_allow_html=True)
 
-model_type = st.sidebar.selectbox(
-    "Modelo de Fila",
-    [
-        "Fila M/G/1",
-        "Fila M/M/s", 
-        "Fila M/M/s/n",
-        "Fila M/M/s/K",
-        "Fila de Prioridade (Servidor Único)",
-        "Fila de Prioridade (Múltiplos Servidores)",
-        "Fila de Prioridade (Sem Interrupção)"
-    ]
-)
+st.caption("Todos os campos aceitam até 8 casas decimais para maior precisão.")
 
-# Add model descriptions in sidebar
-st.sidebar.markdown("---")
-st.sidebar.markdown("### Descrições dos Modelos:")
+model_options = [
+    "Fila M/G/1",
+    "Fila M/M/s",
+    "Fila M/M/s/n",
+    "Fila M/M/s/K",
+    "Fila de Prioridade (Servidor Único)",
+    "Fila de Prioridade (Múltiplos Servidores)",
+    "Fila de Prioridade (Sem Interrupção)"
+]
 
 model_descriptions = {
-    "Fila M/G/1": "Chegadas Poisson, distribuição geral de serviço, 1 servidor",
-    "Fila M/M/s": "Chegadas Poisson, serviço exponencial, s servidores",
-    "Fila M/M/s/n": "M/M/s com capacidade limitada do sistema",
-    "Fila M/M/s/K": "M/M/s com capacidade limitada e perda de clientes",
-    "Fila de Prioridade (Servidor Único)": "Fila com prioridades preemptivas, 1 servidor",
-    "Fila de Prioridade (Múltiplos Servidores)": "Fila com prioridades preemptivas, múltiplos servidores",
-    "Fila de Prioridade (Sem Interrupção)": "Fila com prioridades não-preemptivas, sem interrupção"
+    "Fila M/G/1": "Chegadas Poisson, distribuição geral de serviço e servidor único.",
+    "Fila M/M/s": "Chegadas Poisson, serviço exponencial e múltiplos servidores.",
+    "Fila M/M/s/n": "M/M/s com capacidade limitada do sistema.",
+    "Fila M/M/s/K": "M/M/s com capacidade limitada e possível bloqueio.",
+    "Fila de Prioridade (Servidor Único)": "Prioridades preemptivas com 1 servidor.",
+    "Fila de Prioridade (Múltiplos Servidores)": "Prioridades preemptivas com múltiplos servidores.",
+    "Fila de Prioridade (Sem Interrupção)": "Prioridades não-preemptivas sem interrupção."
 }
 
-st.sidebar.info(model_descriptions[model_type])
-
-# Additional information in sidebar
+st.sidebar.title("Navegação")
+model_type = st.sidebar.radio("Escolha o modelo", model_options)
 st.sidebar.markdown("---")
-st.sidebar.markdown("### Notação:")
-st.sidebar.markdown("""
+st.sidebar.markdown("### Modelo selecionado")
+st.sidebar.success(model_type)
+st.sidebar.caption(model_descriptions[model_type])
+
+with st.sidebar.expander("Notação rápida", expanded=False):
+    st.markdown("""
 - **λ**: Taxa de chegada
-- **μ**: Taxa de serviço  
+- **μ**: Taxa de serviço
 - **s**: Número de servidores
 - **ρ**: Utilização do sistema
-- **L**: Número médio de clientes no sistema
-- **Lq**: Número médio de clientes na fila
+- **L**: Clientes médios no sistema
+- **Lq**: Clientes médios na fila
 - **W**: Tempo médio no sistema
 - **Wq**: Tempo médio na fila
-- **P₀**: Probabilidade do sistema vazio
+- **P₀**: Probabilidade de sistema vazio
 """)
 
-# Priority models comparison
 if "Prioridade" in model_type:
-    st.sidebar.markdown("---")
-    st.sidebar.markdown("### Tipos de Prioridade:")
-    st.sidebar.markdown("""
-    **Com Interrupção (Preemptivo):**
-    - Clientes de alta prioridade podem interromper o atendimento
-    - Condição de estabilidade: ρ < 1
-    
-    **Sem Interrupção (Não-Preemptivo):**
-    - Clientes aguardam o término do atendimento atual
-    - Condição de estabilidade: ∑λᵢ < s×μ (mais restritiva)
-    """)
+    with st.sidebar.expander("Tipos de prioridade", expanded=True):
+        st.markdown("""
+**Com interrupção (preemptivo)**
+- Classe mais prioritária pode interromper atendimento
+- Estabilidade típica: ρ < 1
 
-st.markdown("---")
+**Sem interrupção (não-preemptivo)**
+- Atendimento atual não é interrompido
+- Estabilidade: ∑λᵢ < s×μ
+""")
 
 if model_type == "Fila M/G/1":
     mg1_interface()
@@ -102,8 +118,4 @@ elif model_type == "Fila de Prioridade (Sem Interrupção)":
     priority_without_interruption_interface()
 
 st.markdown("---")
-st.markdown("""
-<div style='text-align: center'>
-    <p>📚 <strong>Calculadora de Teoria de Filas</strong></p>
-</div>
-""", unsafe_allow_html=True)
+st.caption("Calculadora de Teoria de Filas")
