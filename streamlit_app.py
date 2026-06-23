@@ -111,35 +111,59 @@ with st.sidebar.expander("🔍 Como identificar o modelo", expanded=False):
 
 with st.sidebar.expander("📋 Passo a passo para resolver", expanded=False):
     st.markdown("""
-**1. Identifique os dados do enunciado**
-- Taxa de chegada → **λ** (clientes/hora, /min...)
-- Taxa de serviço → **μ** (atendimentos/hora...)
-- Número de servidores → **s**
-- Se der variância → σ² (modelo M/G/1)
-- Se der capacidade máxima → K ou n
-- Se der população total → N (finita)
-- Se der classes de prioridade → modelo de prioridade
+**⚡ Passo 1 — Extrair λ e μ do enunciado**
 
-**2. Identifique o modelo** *(ver "Como identificar")*
+O enunciado pode dar as taxas de dois jeitos:
 
-**3. Verifique a estabilidade**
-- M/M/s e M/G/1: ρ = λ/(sμ) < 1
-- M/M/s/K e M/M/s/n: não precisa (sistema limitado)
+| O que diz | O que usar |
+|---|---|
+| "3 caminhões **por hora**" | λ = 3 |
+| "1 cliente a cada **20 segundos**" | λ = 60/20 = 3/min |
+| "atende em média **15 min**" | μ = 60/15 = 4/h |
+| "taxa de ocupação ρ = 0,8 e Wq = 15 min" | use ρ=λ/μ e Wq=ρ/[μ(1-ρ)] para achar λ e μ |
 
-**4. Calcule P₀ primeiro**
-- É sempre o ponto de partida para as demais fórmulas
+⚠️ λ e μ **devem estar na mesma unidade de tempo**
 
-**5. Calcule as métricas na ordem**
-- Lq → Wq = Lq/λ → L = Lq + λ/μ → W = Wq + 1/μ
-- Ou use a Lei de Little: L = λW e Lq = λWq
+---
+**⚡ Passo 2 — Identificar o modelo**
 
-**6. Se pedir probabilidade P(n)**
-- Substitua P₀ na fórmula de Pₙ do modelo
-- Para acumulada: some os Pₙ individualmente
+- Só 1 servidor + sem limite + serviço qualquer → **M/G/1** (vai dar σ²)
+- 1 ou mais servidores + sem limite → **M/M/s**
+- Tem capacidade máxima (ex: "laboratório comporta 4 pacientes") → **M/M/s/K** (usar aba M/M/s/n)
+- Tem população finita (ex: "10 máquinas no total") → **M/M/s/N** (aba M/M/s/n)
+- Tem classes com prioridade → **Prioridade**
 
-**7. Confira as unidades**
-- λ e μ devem estar na mesma unidade de tempo
-- W e Wq ficam na mesma unidade de 1/μ
+---
+**⚡ Passo 3 — Inserir na calculadora e calcular**
+
+A calculadora já dá: **P₀, Lq, Wq, L, W**
+
+---
+**⚡ Passo 4 — Responder cada item**
+
+| O que pede | Onde está |
+|---|---|
+| "clientes na fila" | **Lq** |
+| "clientes no sistema" | **L** |
+| "tempo de espera na fila" | **Wq** |
+| "tempo no sistema" | **W** |
+| "prob. sistema vazio / ociosidade" | **P₀** |
+| "prob. de n clientes no sistema" | marcar checkbox P(n) |
+| "prob. W > t" ou "prob. Wq > t" | marcar checkbox probabilidade de tempo |
+
+---
+**⚡ Dica: quando pede P(W > t) ou P(Wq > t)**
+- Marque o checkbox de probabilidade de tempo na calculadora M/M/s
+- Coloque o valor de t **na mesma unidade de W**
+- Ex: se W está em horas e pede P(W > 30 min), use t = 0,5
+
+---
+**⚡ Dica: modelo M/M/s/N (pop. finita)**
+- λ = taxa individual de cada máquina/cliente
+- N = total de máquinas/clientes na população
+- s = número de técnicos/servidores
+- Ex: "10 máquinas, 1 técnico, quebra a cada 200h, reparo em 10h"
+  → λ = 1/200, μ = 1/10, s = 1, N = 10
 """)
 
 with st.sidebar.expander("Notação rápida", expanded=False):
