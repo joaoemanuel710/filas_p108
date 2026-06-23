@@ -9,6 +9,7 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.service import StreamlitQueueService
+from interfaces.formulas_reference import show_formulas_mmsk
 
 def display_results(results: Dict[str, Any], title: str):
     """Display M/M/s/K queue calculation results"""
@@ -35,7 +36,8 @@ def display_results(results: Dict[str, Any], title: str):
 def mmsk_interface():
     st.header("Calculadora de Fila M/M/s/K")
     st.markdown("Fila multi-servidor com capacidade limitada e perda de clientes")
-    
+    show_formulas_mmsk()
+
     # Service initialization
     service = StreamlitQueueService()
     

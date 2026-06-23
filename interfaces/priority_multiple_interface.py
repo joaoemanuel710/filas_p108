@@ -10,6 +10,7 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.service import StreamlitQueueService
+from interfaces.formulas_reference import show_formulas_priority_multiple
 
 def display_priority_results(results: Dict[str, Any], title: str, n_classes: int):
     """Display priority queue calculation results"""
@@ -121,7 +122,8 @@ def display_priority_results(results: Dict[str, Any], title: str, n_classes: int
 def priority_multiple_servers_interface():
     st.header("Calculadora de Fila de Prioridade - Múltiplos Servidores")
     st.markdown("Fila de prioridade preemptiva com interrupção e múltiplos servidores")
-    
+    show_formulas_priority_multiple()
+
     # Service initialization
     service = StreamlitQueueService()
     

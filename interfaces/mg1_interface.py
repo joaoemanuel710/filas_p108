@@ -9,6 +9,7 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.service import StreamlitQueueService
+from interfaces.formulas_reference import show_formulas_mg1
 
 def display_results(results: Dict[str, Any], title: str):
     """Display M/G/1 queue calculation results"""
@@ -34,7 +35,8 @@ def display_results(results: Dict[str, Any], title: str):
 def mg1_interface():
     st.header("Calculadora de Fila M/G/1")
     st.markdown("Fila de servidor único com chegadas Poisson e distribuição geral de tempo de serviço")
-    
+    show_formulas_mg1()
+
     # Service initialization
     service = StreamlitQueueService()
     
