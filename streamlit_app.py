@@ -109,6 +109,39 @@ with st.sidebar.expander("🔍 Como identificar o modelo", expanded=False):
 """)
 
 
+with st.sidebar.expander("📋 Passo a passo para resolver", expanded=False):
+    st.markdown("""
+**1. Identifique os dados do enunciado**
+- Taxa de chegada → **λ** (clientes/hora, /min...)
+- Taxa de serviço → **μ** (atendimentos/hora...)
+- Número de servidores → **s**
+- Se der variância → σ² (modelo M/G/1)
+- Se der capacidade máxima → K ou n
+- Se der população total → N (finita)
+- Se der classes de prioridade → modelo de prioridade
+
+**2. Identifique o modelo** *(ver "Como identificar")*
+
+**3. Verifique a estabilidade**
+- M/M/s e M/G/1: ρ = λ/(sμ) < 1
+- M/M/s/K e M/M/s/n: não precisa (sistema limitado)
+
+**4. Calcule P₀ primeiro**
+- É sempre o ponto de partida para as demais fórmulas
+
+**5. Calcule as métricas na ordem**
+- Lq → Wq = Lq/λ → L = Lq + λ/μ → W = Wq + 1/μ
+- Ou use a Lei de Little: L = λW e Lq = λWq
+
+**6. Se pedir probabilidade P(n)**
+- Substitua P₀ na fórmula de Pₙ do modelo
+- Para acumulada: some os Pₙ individualmente
+
+**7. Confira as unidades**
+- λ e μ devem estar na mesma unidade de tempo
+- W e Wq ficam na mesma unidade de 1/μ
+""")
+
 with st.sidebar.expander("Notação rápida", expanded=False):
     st.markdown("""
 - **λ**: Taxa de chegada
