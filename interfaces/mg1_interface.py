@@ -9,7 +9,6 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.service import StreamlitQueueService
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from formulas_reference import show_formulas_mg1
 
 def display_results(results: Dict[str, Any], title: str):
