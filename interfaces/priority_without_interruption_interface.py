@@ -10,7 +10,8 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.service import StreamlitQueueService
-from interfaces.formulas_reference import show_formulas_priority_without_interruption
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from formulas_reference import show_formulas_priority_without_interruption
 
 def display_priority_results(results: Dict[str, Any], title: str, n_classes: int):
     """Display priority queue calculation results"""
