@@ -77,7 +77,7 @@ st.sidebar.markdown("### Modelo selecionado")
 st.sidebar.success(model_type)
 st.sidebar.caption(model_descriptions[model_type])
 
-with st.sidebar.expander("🔍 Como identificar o modelo", expanded=False):
+with st.sidebar.expander("🔍", expanded=False):
     st.markdown("""
 **M/G/1**
 - 1 servidor, distribuição de serviço qualquer
@@ -109,7 +109,7 @@ with st.sidebar.expander("🔍 Como identificar o modelo", expanded=False):
 """)
 
 
-with st.sidebar.expander("📋 Passo a passo para resolver", expanded=False):
+with st.sidebar.expander("📋", expanded=False):
     st.markdown("""
 **⚡ Passo 1 — Extrair λ e μ do enunciado**
 
