@@ -63,10 +63,16 @@ def mmsk_interface():
     
     # Additional calculations
     st.subheader("Cálculos Adicionais")
-    calc_prob_n = st.checkbox("Calcular P(n clientes no sistema)", key="mmsk_calc_prob_n")
-    
+    calc_prob_n = st.checkbox("Calcular probabilidade por número de clientes", key="mmsk_calc_prob_n")
+
+    target_n = 0
+    prob_type_n = "P(n = N)"
     if calc_prob_n:
-        target_n = st.number_input("Número alvo de clientes", min_value=0, max_value=K, value=min(5, K), step=1, key="mmsk_target_n")
+        col1, col2 = st.columns(2)
+        with col1:
+            target_n = st.number_input("Número alvo de clientes (N)", min_value=0, max_value=K, value=min(5, K), step=1, key="mmsk_target_n")
+        with col2:
+            prob_type_n = st.selectbox("Tipo de probabilidade", ["P(n = N)", "P(n ≤ N)", "P(n < N)", "P(n ≥ N)", "P(n > N)"], key="mmsk_prob_type_n")
     
     if st.button("Calcular M/M/s/K", key="mmsk_calculate"):
         try:
@@ -78,8 +84,22 @@ def mmsk_interface():
                 
                 # Additional calculations results
                 if calc_prob_n:
-                    prob_n = service.calculate_mmsk_prob_n(lmbd, mu, s, K, target_n)
-                    st.metric(f"P({target_n} clientes no sistema)", f"{prob_n:.8f}")
+                    if prob_type_n == "P(n = N)":
+                        result_prob = service.calculate_mmsk_prob_n(lmbd, mu, s, K, target_n)
+                        label = f"P(n = {target_n})"
+                    elif prob_type_n == "P(n ≤ N)":
+                        result_prob = sum(service.calculate_mmsk_prob_n(lmbd, mu, s, K, i) for i in range(target_n + 1))
+                        label = f"P(n ≤ {target_n})"
+                    elif prob_type_n == "P(n < N)":
+                        result_prob = sum(service.calculate_mmsk_prob_n(lmbd, mu, s, K, i) for i in range(target_n))
+                        label = f"P(n < {target_n})"
+                    elif prob_type_n == "P(n ≥ N)":
+                        result_prob = 1 - sum(service.calculate_mmsk_prob_n(lmbd, mu, s, K, i) for i in range(target_n))
+                        label = f"P(n ≥ {target_n})"
+                    else:
+                        result_prob = 1 - sum(service.calculate_mmsk_prob_n(lmbd, mu, s, K, i) for i in range(target_n + 1))
+                        label = f"P(n > {target_n})"
+                    st.metric(label, f"{result_prob:.8f}")
                 
                 # Show blocking probability
                 prob_K = service.calculate_mmsk_prob_n(lmbd, mu, s, K, K)

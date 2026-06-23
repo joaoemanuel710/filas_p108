@@ -77,6 +77,38 @@ st.sidebar.markdown("### Modelo selecionado")
 st.sidebar.success(model_type)
 st.sidebar.caption(model_descriptions[model_type])
 
+with st.sidebar.expander("🔍 Como identificar o modelo", expanded=False):
+    st.markdown("""
+**M/G/1**
+- 1 servidor, distribuição de serviço qualquer
+- Dado: E(S) e Var(S) ou σ²
+
+**M/M/s**
+- s servidores, serviço exponencial
+- Capacidade e população infinitas
+- Condição: ρ = λ/(sμ) < 1
+
+**M/M/s/n** *(capacidade finita)*
+- s servidores, capacidade total n
+- Clientes rejeitados se sistema cheio
+- ρ pode ser ≥ 1
+
+**M/M/s/K** *(população finita)*
+- s servidores, K clientes no universo
+- Taxa de chegada depende de quem está fora
+- Não há rejeição, só redução de chegadas
+
+**Prioridade com interrupção**
+- Classes de clientes com prioridades
+- Atendimento pode ser interrompido
+- W_k depende de σ_{k-1} e σ_k
+
+**Prioridade sem interrupção**
+- Classes de prioridade, mas sem parar o serviço
+- Usa base M/M/s + fator de prioridade
+""")
+
+
 with st.sidebar.expander("Notação rápida", expanded=False):
     st.markdown("""
 - **λ**: Taxa de chegada
